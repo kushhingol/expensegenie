@@ -1,0 +1,40 @@
+{
+  "name": "expensegenie",
+  "version": "1.0.0",
+  "private": true,
+  "packageManager": "pnpm@10.3.0",
+  "description": "",
+  "scripts": {
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "lint": "turbo run lint",
+    "dev:server": "pnpm --filter -w apps/server dev",
+    "dev:app:start": "pnpm --filter -w apps/mobile start",
+    "dev:app:start:android": "pnpm -w --filter apps/mobile android",
+    "dev:app:start:ios": "pnpm -w  --filter apps/mobile ios",
+    "dev:app:start:web": "pnpm -w  --filter apps/mobile web",
+    "dev:app:build": "pnpm -w  --filter apps/mobile build",
+    "proto:generate": "node scripts/generate-proto.js",
+    "proto:clean": "rimraf packages/proto-gen/src/*.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@protobuf-ts/plugin": "^2.11.1",
+    "@protobuf-ts/runtime": "^2.11.1",
+    "@types/node": "^24.8.0",
+    "eslint": "^9.37.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.4",
+    "prettier": "^3.6.2",
+    "rimraf": "^6.0.1",
+    "ts-node": "^10.9.2",
+    "ts-proto": "^2.7.7",
+    "turbo": "^2.5.8",
+    "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "@bufbuild/protobuf": "^2.9.0"
+  }
+}
