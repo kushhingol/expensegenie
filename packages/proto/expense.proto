@@ -1,0 +1,13 @@
+syntax = "proto3";
+package expensegenie;
+
+message ExpenseEntry {
+  string id = 1;
+  string workspaceId = 2;
+  string title = 3;
+  double amount = 4;
+  string category = 5;
+  string date = 6;
+  repeated string tags = 7;
+}
+

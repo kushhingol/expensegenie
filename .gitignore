@@ -1,0 +1,23 @@
+# dependencies
+node_modules
+.pnpm-store
+dist
+build
+*.log
+
+# generated proto files (optional)
+packages/proto-gen
+
+# local environment
+.env
+.env.local
+.DS_Store
+
+# Turbo cache
+.turbo
+
+# Expo/React Native
+.expo
+android/
+ios/
+
