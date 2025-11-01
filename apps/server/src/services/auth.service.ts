@@ -1,11 +1,14 @@
 import jwt from "jsonwebtoken";
-import { googleClient } from "../config/google";
+import { googleClient, CLIENT_IDS } from "../config/google";
 import { User } from "../models/user.model";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 export const verifyGoogleToken = async (token: string) => {
   const ticket = await googleClient.verifyIdToken({
     idToken: token,
-    audience: process.env.GOOGLE_CLIENT_ID,
+    audience: CLIENT_IDS,
   });
   const payload = ticket.getPayload();
   return payload;

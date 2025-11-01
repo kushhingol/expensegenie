@@ -16,8 +16,8 @@
     "forceConsistentCasingInFileNames": true,
     "baseUrl": ".",
     "paths": {
-      "@expensegenie/proto-gen": ["packages/proto-gen/src"],
-      "@expensegenie/types": ["packages/types/src"]
+      "@expensegenie/proto-gen": ["packages/proto-gen/src/*"],
+      "@expensegenie/types": ["packages/types/*"]
     }
   },
   "exclude": ["node_modules", "dist", "packages/proto-gen"]

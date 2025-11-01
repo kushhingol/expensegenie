@@ -1,0 +1,43 @@
+{
+  "info": {
+    "name": "ExpenseGenie Google Auth",
+    "_postman_id": "expensegenie-google-auth-collection",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Google SignIn",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"idToken\": \"<PUT_GOOGLE_ID_TOKEN_HERE>\"\n}"
+        },
+        "url": {
+          "raw": "{{API_URL}}/api/auth/google",
+          "host": [
+            "{{API_URL}}"
+          ],
+          "path": [
+            "api",
+            "auth",
+            "google"
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "variable": [
+    {
+      "key": "API_URL",
+      "value": "http://localhost:4000"
+    }
+  ]
+}

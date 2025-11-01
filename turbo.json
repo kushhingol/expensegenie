@@ -1,18 +1,31 @@
 {
   "$schema": "https://turbo.build/schema.json",
   "tasks": {
+    "proto": {
+      "cache": true,
+      "outputs": [
+        "packages/proto-gen/src/generated/**",
+        "packages/proto-gen/src/index.ts"
+      ]
+    },
     "build": {
       "dependsOn": [
-        "^build"
+        "^build",
+        "proto"
       ],
       "outputs": [
         "dist/**"
       ]
     },
     "dev": {
-      "cache": false
+      "cache": false,
+      "persistent": true
     },
-    "lint": {},
-    "test": {}
+    "lint": {
+      "outputs": []
+    },
+    "test": {
+      "outputs": []
+    }
   }
 }

@@ -12,7 +12,7 @@ app.use(cookieParser());
 
 app.use("/api/auth", authRoutes);
 
-// must be at the end
+// must be at the end for managing errors
 app.use(errorHandler);
 
 export default app;

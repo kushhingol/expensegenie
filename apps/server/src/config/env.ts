@@ -8,9 +8,10 @@ dotenv.config({
 const requiredEnvVars = [
   "PORT",
   "MONGO_URI",
-  "GOOGLE_CLIENT_ID",
-  "GOOGLE_CLIENT_SECRET",
+  "GOOGLE_CLIENT_ID_WEB",
   "JWT_SECRET",
+  "GOOGLE_CLIENT_ID_ANDROID",
+  "GOOGLE_CLIENT_ID_IOD",
 ];
 
 requiredEnvVars.forEach((key) => {
@@ -22,7 +23,8 @@ requiredEnvVars.forEach((key) => {
 export const env = {
   port: Number(process.env.PORT) || 4000,
   mongoUri: process.env.MONGO_URI!,
-  googleClientId: process.env.GOOGLE_CLIENT_ID!,
-  googleClientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+  googleClientIdWeb: process.env.GOOGLE_CLIENT_ID_WEB!,
+  googleClientIdAndroid: process.env.GOOGLE_CLIENT_ID_ANDROID!,
+  googleClientIdIOS: process.env.GOOGLE_CLIENT_ID_IOS!,
   jwtSecret: process.env.JWT_SECRET!,
 };
