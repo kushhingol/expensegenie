@@ -21,3 +21,4 @@ packages/proto-gen
 android/
 ios/
 
+.env

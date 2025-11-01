@@ -1,7 +1,13 @@
-import express from "express";
-const app = express();
-app.use(express.json());
-app.get("/ping", (req, res) => res.json({ ok: true }));
-const port = process.env.PORT || 4000;
-app.listen(port, () => console.log(`Server running on ${port}`));
+import dotenv from "dotenv";
+import app from "./app";
+import { connectDB } from "./config/db";
 
+dotenv.config();
+
+const PORT = process.env.PORT || 5000;
+
+connectDB();
+
+app.listen(PORT, () =>
+  console.log(`🚀 Server running on http://localhost:${PORT}`)
+);
