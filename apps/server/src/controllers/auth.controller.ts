@@ -7,8 +7,10 @@ import {
 
 export const googleLogin = async (req: Request, res: Response) => {
   try {
-    const { token } = req.body;
-    const payload = await verifyGoogleToken(token);
+    const { idToken } = req.body;
+    if (!idToken) return res.status(400).json({ error: "idToken required" });
+
+    const payload = await verifyGoogleToken(idToken);
     if (!payload)
       return res.status(400).json({ message: "Invalid Google token" });
 

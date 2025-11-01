@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
+    "dev": "ts-node-dev --no-deprecation --respawn --transpile-only src/index.ts",
     "build": "tsc -p tsconfig.json",
     "start": "node dist/index.js"
   },
@@ -13,6 +13,7 @@
   "license": "ISC",
   "dependencies": {
     "cookie-parser": "^1.4.7",
+    "cookie-session": "^2.1.1",
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
     "express": "^5.1.0",
@@ -21,7 +22,11 @@
     "helmet": "^8.1.0",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.19.1",
-    "winston": "^3.18.3"
+    "passport": "^0.7.0",
+    "passport-google-oauth20": "^2.0.0",
+    "winston": "^3.18.3",
+    "@expensegenie/proto-gen": "workspace:*",
+    "@expensegenie/types": "workspace:*"
   },
   "devDependencies": {
     "@types/cookie-parser": "^1.4.9",
@@ -30,6 +35,8 @@
     "@types/express-validator": "^3.0.2",
     "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^24.8.0",
+    "@types/passport": "^1.0.17",
+    "@types/passport-google-oauth20": "^2.0.17",
     "@typescript-eslint/eslint-plugin": "^8.46.1",
     "@typescript-eslint/parser": "^8.46.1",
     "eslint": "^9.37.0",
