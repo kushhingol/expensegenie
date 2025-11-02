@@ -16,15 +16,18 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 9 # or whatever version you're using
+          run_install: false # prevents auto install; we handle it later
+
       - name: Use Node.js 20
         uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: "pnpm"
           cache-dependency-path: pnpm-lock.yaml
-
-      - name: Install pnpm
-        run: npm install -g pnpm@latest
 
       - name: Install dependencies
         run: pnpm install
