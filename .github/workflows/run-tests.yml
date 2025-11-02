@@ -23,7 +23,7 @@ jobs:
           cache: "npm" # caches node_modules
 
       - name: Install dependencies
-        run: pnpm install
+        run: npm install
 
       - name: Run tests
         env:
