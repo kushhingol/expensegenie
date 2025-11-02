@@ -21,14 +21,15 @@ jobs:
         with:
           node-version: 20
           cache: "pnpm"
+          cache-dependency-path: pnpm-lock.yaml
 
       - name: Install pnpm
-        run: npm install -g pnpm
+        run: npm install -g pnpm@latest
 
       - name: Install dependencies
         run: pnpm install
 
-      - name: Run tests
+      - name: Run server tests
         env:
           JWT_SECRET: test-secret # required by your test cases
         run: pnpm run dev:server:test
