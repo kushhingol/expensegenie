@@ -15,7 +15,8 @@
     "dev:app:start:web": "pnpm  --filter ./apps/mobile web",
     "dev:app:build": "pnpm  --filter ./apps/mobile build",
     "proto:generate": "node scripts/generate-proto.js && pnpm run -w --filter ./packages/proto-gen build",
-    "proto:clean": "rimraf packages/proto-gen/src/*.ts"
+    "proto:clean": "rimraf packages/proto-gen/src/*.ts",
+    "dev:server:test": "pnpm --filter ./apps/server test"
   },
   "keywords": [],
   "author": "",

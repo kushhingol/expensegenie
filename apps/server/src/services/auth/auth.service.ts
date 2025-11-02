@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
-import { googleClient, CLIENT_IDS } from "../config/google";
-import { User } from "../models/user.model";
+import { googleClient, CLIENT_IDS } from "../../config/google";
+import { User } from "../../models/user.model";
 import dotenv from "dotenv";
 
 dotenv.config();

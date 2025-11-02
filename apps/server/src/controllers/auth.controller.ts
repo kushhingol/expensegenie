@@ -3,7 +3,7 @@ import {
   verifyGoogleToken,
   createOrGetUser,
   generateJWT,
-} from "../services/auth.service";
+} from "../services/auth/auth.service";
 
 export const googleLogin = async (req: Request, res: Response) => {
   try {
