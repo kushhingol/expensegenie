@@ -18,4 +18,11 @@ router.delete(
   TemplateController.deleteTemplateController
 );
 
+router.put(
+  "/edit/:templateId",
+  authenticateUser,
+  validateTemplateRequest,
+  TemplateController.updateTemplateController
+);
+
 export default router;
