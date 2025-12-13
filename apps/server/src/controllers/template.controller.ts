@@ -9,6 +9,10 @@ export class TemplateController {
   static async deleteTemplateController(req: Request, res: Response) {
     return deleteTemplateControllerMethod(req, res);
   }
+
+  static async updateTemplateController(req: Request, res: Response) {
+    return updateTemplateontrollerMethod(req, res);
+  }
 }
 
 const createTemplateControllerFn = async (req: Request, res: Response) => {
@@ -55,6 +59,39 @@ const deleteTemplateControllerMethod = async (req: Request, res: Response) => {
   } catch (err: any) {
     return res.status(500).json({
       message: err?.message || "Failed to delete template",
+    });
+  }
+};
+
+const updateTemplateontrollerMethod = async (req: Request, res: Response) => {
+  try {
+    const templateId = req?.params?.templateId;
+    const payload = req?.body;
+    const { name, customFields, isPublic } = payload;
+
+    if (!name || !customFields) {
+      return res.status(400).json({
+        message: "name and customFields are required",
+      });
+    }
+
+    const updateTemplate = await TemplateService.updateTemplate(templateId, {
+      customFields,
+      isPublic,
+      name,
+      userId: payload.userId,
+    });
+
+    if (!updateTemplate) {
+      throw new Error("Failted to update template");
+    }
+
+    return res.status(200).json({
+      message: "Tempate Updated successfully",
+    });
+  } catch (err: any) {
+    return res.status(500).json({
+      message: err.message || "Failed to update template",
     });
   }
 };

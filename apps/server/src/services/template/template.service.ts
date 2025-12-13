@@ -9,6 +9,13 @@ export class TemplateService {
   static async deleteTemplateFn(templateId: string) {
     return deleteTemplateFn(templateId);
   }
+
+  static async updateTemplate(
+    templateId: string,
+    payload: Omit<TemplateType, "id">
+  ) {
+    return updateTemplateFn(templateId, payload);
+  }
 }
 
 export const createTemplateFn = async (payload: Omit<TemplateType, "id">) => {
@@ -18,7 +25,7 @@ export const createTemplateFn = async (payload: Omit<TemplateType, "id">) => {
     );
   }
 
-  const normalizedFields = payload.customFields.map((field) => ({
+  const normalizedFields = payload.customFields?.map((field) => ({
     label: field.label.trim(),
     type: field.type,
     options: field.options || [],
@@ -29,7 +36,7 @@ export const createTemplateFn = async (payload: Omit<TemplateType, "id">) => {
     userId: payload.userId,
     name: payload.name.trim(),
     isPublic: payload.isPublic || false,
-    customFields: normalizedFields,
+    customFields: normalizedFields || [],
   });
 
   return template;
@@ -42,4 +49,37 @@ const deleteTemplateFn = async (templateId: string) => {
   }
 
   return deletedTemplate;
+};
+
+const updateTemplateFn = async (
+  templateId: string,
+  payload: Omit<TemplateType, "id">
+) => {
+  if (!templateId) {
+    throw new Error("templateId is missing");
+  }
+
+  if (!payload) {
+    throw new Error("Payload is missing");
+  }
+
+  const normalizedFields = payload.customFields?.map((field) => ({
+    label: field.label.trim(),
+    type: field.type,
+    options: field.options || [],
+    required: field.required || false,
+  }));
+
+  const updateTemplate = await TemplateModel.findByIdAndUpdate(templateId, {
+    userId: payload.userId,
+    name: payload.name.trim(),
+    isPublic: payload.isPublic,
+    customFields: normalizedFields || [],
+  });
+
+  if (!updateTemplate) {
+    throw new Error("Failed to update template");
+  }
+
+  return updateTemplate;
 };
