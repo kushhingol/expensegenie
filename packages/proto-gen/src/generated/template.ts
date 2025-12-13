@@ -218,7 +218,6 @@ export function fieldTypeToJSON(object: FieldType): string {
 }
 
 export interface Template {
-  id: string;
   userId: string;
   name: string;
   isPublic: boolean;
@@ -234,28 +233,25 @@ export interface CustomFields {
 }
 
 function createBaseTemplate(): Template {
-  return { id: "", userId: "", name: "", isPublic: false, createdAt: undefined, customFields: [] };
+  return { userId: "", name: "", isPublic: false, createdAt: undefined, customFields: [] };
 }
 
 export const Template: MessageFns<Template> = {
   encode(message: Template, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.id !== "") {
-      writer.uint32(10).string(message.id);
-    }
     if (message.userId !== "") {
-      writer.uint32(18).string(message.userId);
+      writer.uint32(10).string(message.userId);
     }
     if (message.name !== "") {
-      writer.uint32(26).string(message.name);
+      writer.uint32(18).string(message.name);
     }
     if (message.isPublic !== false) {
-      writer.uint32(32).bool(message.isPublic);
+      writer.uint32(24).bool(message.isPublic);
     }
     if (message.createdAt !== undefined) {
-      Timestamp.encode(toTimestamp(message.createdAt), writer.uint32(42).fork()).join();
+      Timestamp.encode(toTimestamp(message.createdAt), writer.uint32(34).fork()).join();
     }
     for (const v of message.customFields) {
-      CustomFields.encode(v!, writer.uint32(50).fork()).join();
+      CustomFields.encode(v!, writer.uint32(42).fork()).join();
     }
     return writer;
   },
@@ -272,7 +268,7 @@ export const Template: MessageFns<Template> = {
             break;
           }
 
-          message.id = reader.string();
+          message.userId = reader.string();
           continue;
         }
         case 2: {
@@ -280,35 +276,27 @@ export const Template: MessageFns<Template> = {
             break;
           }
 
-          message.userId = reader.string();
-          continue;
-        }
-        case 3: {
-          if (tag !== 26) {
-            break;
-          }
-
           message.name = reader.string();
           continue;
         }
-        case 4: {
-          if (tag !== 32) {
+        case 3: {
+          if (tag !== 24) {
             break;
           }
 
           message.isPublic = reader.bool();
           continue;
         }
-        case 5: {
-          if (tag !== 42) {
+        case 4: {
+          if (tag !== 34) {
             break;
           }
 
           message.createdAt = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
           continue;
         }
-        case 6: {
-          if (tag !== 50) {
+        case 5: {
+          if (tag !== 42) {
             break;
           }
 
@@ -326,7 +314,6 @@ export const Template: MessageFns<Template> = {
 
   fromJSON(object: any): Template {
     return {
-      id: isSet(object.id) ? globalThis.String(object.id) : "",
       userId: isSet(object.userId) ? globalThis.String(object.userId) : "",
       name: isSet(object.name) ? globalThis.String(object.name) : "",
       isPublic: isSet(object.isPublic) ? globalThis.Boolean(object.isPublic) : false,
@@ -339,9 +326,6 @@ export const Template: MessageFns<Template> = {
 
   toJSON(message: Template): unknown {
     const obj: any = {};
-    if (message.id !== "") {
-      obj.id = message.id;
-    }
     if (message.userId !== "") {
       obj.userId = message.userId;
     }
@@ -365,7 +349,6 @@ export const Template: MessageFns<Template> = {
   },
   fromPartial<I extends Exact<DeepPartial<Template>, I>>(object: I): Template {
     const message = createBaseTemplate();
-    message.id = object.id ?? "";
     message.userId = object.userId ?? "";
     message.name = object.name ?? "";
     message.isPublic = object.isPublic ?? false;

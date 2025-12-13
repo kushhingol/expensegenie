@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { TemplateService } from "../services/template/template.service";
+import { getUserIdFromRequest } from "../utils/user.utils";
 
 export class TemplateController {
   static async createTemplateController(req: Request, res: Response) {
@@ -19,6 +20,8 @@ const createTemplateControllerFn = async (req: Request, res: Response) => {
   try {
     const { name, isPublic, customFields, userId } = req.body;
 
+    const userIdFromToken = getUserIdFromRequest(req);
+
     if (!name || !customFields) {
       return res.status(400).json({
         message: "name and customFields are required",
@@ -26,7 +29,7 @@ const createTemplateControllerFn = async (req: Request, res: Response) => {
     }
 
     const template = await TemplateService.createTemplate({
-      userId,
+      userId: userIdFromToken || userId,
       name,
       isPublic,
       customFields,
@@ -67,7 +70,9 @@ const updateTemplateontrollerMethod = async (req: Request, res: Response) => {
   try {
     const templateId = req?.params?.templateId;
     const payload = req?.body;
-    const { name, customFields, isPublic } = payload;
+    const { name, customFields, isPublic, userId } = payload;
+
+    const userIdFromToken = getUserIdFromRequest(req);
 
     if (!name || !customFields) {
       return res.status(400).json({
@@ -79,7 +84,7 @@ const updateTemplateontrollerMethod = async (req: Request, res: Response) => {
       customFields,
       isPublic,
       name,
-      userId: payload.userId,
+      userId: userIdFromToken || userId,
     });
 
     if (!updateTemplate) {
