@@ -6,7 +6,7 @@ import "google/protobuf/timestamp.proto";
 message User {
   string name = 1;
   string email = 2;
-  string googleId = 3;
-  string profilePic = 4;
-  google.protobuf.Timestamp createdAt = 5;
+  string google_id = 3;
+  string profile_pic = 4;
+  google.protobuf.Timestamp created_at = 5;
 }

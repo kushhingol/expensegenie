@@ -24,6 +24,9 @@ importers:
       eslint:
         specifier: ^9.37.0
         version: 9.37.0
+      fast-glob:
+        specifier: ^3.3.3
+        version: 3.3.3
       husky:
         specifier: ^9.1.7
         version: 9.1.7
@@ -33,6 +36,9 @@ importers:
       prettier:
         specifier: ^3.6.2
         version: 3.6.2
+      protoc:
+        specifier: ^33.2.0
+        version: 33.2.0
       rimraf:
         specifier: ^6.0.1
         version: 6.0.1
@@ -3834,6 +3840,11 @@ packages:
   prompts@2.4.2:
     resolution: {integrity: sha512-NxNv/kLguCA7p3jE8oL2aEBsrJWgAakBpgmgK6lpPWV+WuOmY6r2/zbAVnP+T8bQlA0nzHXSJSJW0Hq7ylaD2Q==}
     engines: {node: '>= 6'}
+
+  protoc@33.2.0:
+    resolution: {integrity: sha512-SQwG0NBae7ASCu5iOXnycA+8D9h0sclgGmdgE0gy4QKjK+k5glswMT1SLmo9tecSleqik2N9fzleGr9X3vLWgw==}
+    engines: {node: '>=20.0.0'}
+    hasBin: true
 
   proxy-addr@2.0.7:
     resolution: {integrity: sha512-llQsMLSUDUPT44jdrU/O37qlnifitDP+ZwrmmZcoSKyLKvtZxpyV0n2/bD/N4tBAAZ/gJEdZU7KMraoK1+XYAg==}
@@ -9444,6 +9455,8 @@ snapshots:
     dependencies:
       kleur: 3.0.3
       sisteransi: 1.0.5
+
+  protoc@33.2.0: {}
 
   proxy-addr@2.0.7:
     dependencies:
