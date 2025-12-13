@@ -6,6 +6,7 @@
 
 /* eslint-disable */
 import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
+import { Timestamp } from "./google/protobuf/timestamp";
 
 export enum FieldType {
   FIELD_TYPE_UNSPECIFIED = 0,
@@ -221,7 +222,7 @@ export interface Template {
   userId: string;
   name: string;
   isPublic: boolean;
-  createdAt: string;
+  createdAt?: Date | undefined;
   customFields: CustomFields[];
 }
 
@@ -233,7 +234,7 @@ export interface CustomFields {
 }
 
 function createBaseTemplate(): Template {
-  return { id: "", userId: "", name: "", isPublic: false, createdAt: "", customFields: [] };
+  return { id: "", userId: "", name: "", isPublic: false, createdAt: undefined, customFields: [] };
 }
 
 export const Template: MessageFns<Template> = {
@@ -250,8 +251,8 @@ export const Template: MessageFns<Template> = {
     if (message.isPublic !== false) {
       writer.uint32(32).bool(message.isPublic);
     }
-    if (message.createdAt !== "") {
-      writer.uint32(42).string(message.createdAt);
+    if (message.createdAt !== undefined) {
+      Timestamp.encode(toTimestamp(message.createdAt), writer.uint32(42).fork()).join();
     }
     for (const v of message.customFields) {
       CustomFields.encode(v!, writer.uint32(50).fork()).join();
@@ -303,7 +304,7 @@ export const Template: MessageFns<Template> = {
             break;
           }
 
-          message.createdAt = reader.string();
+          message.createdAt = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
           continue;
         }
         case 6: {
@@ -329,7 +330,7 @@ export const Template: MessageFns<Template> = {
       userId: isSet(object.userId) ? globalThis.String(object.userId) : "",
       name: isSet(object.name) ? globalThis.String(object.name) : "",
       isPublic: isSet(object.isPublic) ? globalThis.Boolean(object.isPublic) : false,
-      createdAt: isSet(object.createdAt) ? globalThis.String(object.createdAt) : "",
+      createdAt: isSet(object.createdAt) ? fromJsonTimestamp(object.createdAt) : undefined,
       customFields: globalThis.Array.isArray(object?.customFields)
         ? object.customFields.map((e: any) => CustomFields.fromJSON(e))
         : [],
@@ -350,8 +351,8 @@ export const Template: MessageFns<Template> = {
     if (message.isPublic !== false) {
       obj.isPublic = message.isPublic;
     }
-    if (message.createdAt !== "") {
-      obj.createdAt = message.createdAt;
+    if (message.createdAt !== undefined) {
+      obj.createdAt = message.createdAt.toISOString();
     }
     if (message.customFields?.length) {
       obj.customFields = message.customFields.map((e) => CustomFields.toJSON(e));
@@ -368,7 +369,7 @@ export const Template: MessageFns<Template> = {
     message.userId = object.userId ?? "";
     message.name = object.name ?? "";
     message.isPublic = object.isPublic ?? false;
-    message.createdAt = object.createdAt ?? "";
+    message.createdAt = object.createdAt ?? undefined;
     message.customFields = object.customFields?.map((e) => CustomFields.fromPartial(e)) || [];
     return message;
   },
@@ -493,6 +494,28 @@ type DeepPartial<T> = T extends Builtin ? T
 type KeysOfUnion<T> = T extends T ? keyof T : never;
 type Exact<P, I extends P> = P extends Builtin ? P
   : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
+
+function toTimestamp(date: Date): Timestamp {
+  const seconds = Math.trunc(date.getTime() / 1_000);
+  const nanos = (date.getTime() % 1_000) * 1_000_000;
+  return { seconds, nanos };
+}
+
+function fromTimestamp(t: Timestamp): Date {
+  let millis = (t.seconds || 0) * 1_000;
+  millis += (t.nanos || 0) / 1_000_000;
+  return new globalThis.Date(millis);
+}
+
+function fromJsonTimestamp(o: any): Date {
+  if (o instanceof globalThis.Date) {
+    return o;
+  } else if (typeof o === "string") {
+    return new globalThis.Date(o);
+  } else {
+    return fromTimestamp(Timestamp.fromJSON(o));
+  }
+}
 
 function isSet(value: any): boolean {
   return value !== null && value !== undefined;
