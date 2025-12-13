@@ -1,0 +1,71 @@
+syntax = "proto3";
+package expensegenie;
+
+
+message Template {
+  string                id           = 1;
+  string                user_id       = 2;
+  string                name         = 3;
+  bool                  is_public     = 4;
+  string                created_at    = 5;
+  repeated CustomFields custom_fields = 6;
+}
+
+
+enum FieldType {
+  FIELD_TYPE_UNSPECIFIED = 0;
+
+  // Numeric
+  AMOUNT                 = 1;
+  NUMBER                 = 2;
+  PERCENTAGE             = 3;
+
+  // Text
+  TEXT                   = 4;
+  TEXTAREA               = 5;
+  EMAIL                  = 6;
+  PHONE                  = 7;
+  URL                    = 8;
+
+  // Date
+  DATE                   = 9;
+  DATETIME               = 10;
+  MONTH_YEAR             = 11;
+
+  // Selection
+  DROPDOWN               = 12;
+  MULTI_SELECT           = 13;
+  RADIO                  = 14;
+  CHECKBOX               = 15;
+
+  // Expense specific
+  CATEGORY               = 16;
+  PAYMENT_MODE           = 17;
+  CURRENCY               = 18;
+  TAX_AMOUNT             = 19;
+  TAX_NUMBER             = 20;
+  INVOICE_NUMBER         = 21;
+  MERCHANT               = 22;
+
+  // Files
+  FILE                   = 23;
+  IMAGE                  = 24;
+  RECEIPT                = 25;
+
+  // Location / travel
+  LOCATION               = 26;
+  DISTANCE               = 27;
+
+  // Boolean / system
+  BOOLEAN                = 28;
+  AUTO_GENERATED         = 29;
+}
+
+
+
+message CustomFields {
+  string          label    = 1;
+  FieldType       type     = 2;
+  repeated string options  = 3;
+  bool            required = 4;
+}

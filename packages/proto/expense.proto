@@ -3,7 +3,7 @@ package expensegenie;
 
 message ExpenseEntry {
   string id = 1;
-  string workspaceId = 2;
+  string workspace_id = 2;
   string title = 3;
   double amount = 4;
   string category = 5;

@@ -1,79 +1,114 @@
 #!/usr/bin/env node
+
 const { execSync } = require("child_process");
 const path = require("path");
 const fs = require("fs");
+const fg = require("fast-glob");
 
-const PROTO_SRC = path.resolve(__dirname, "../packages/proto");
-const GEN_DIR = path.resolve(__dirname, "../packages/proto-gen/src/generated");
-const INDEX_FILE = path.resolve(
-  __dirname,
-  "../packages/proto-gen/src/index.ts"
+// ----------------------------------------------------------------------------
+// Paths
+// ----------------------------------------------------------------------------
+
+const ROOT_DIR = path.resolve(__dirname, "..");
+
+const PROTO_SRC = path.join(ROOT_DIR, "packages/proto");
+const GEN_DIR = path.join(
+  ROOT_DIR,
+  "packages/proto-gen/src/generated"
+);
+const INDEX_FILE = path.join(
+  ROOT_DIR,
+  "packages/proto-gen/src/index.ts"
 );
 
-// ----------------------------------------------------------------------------
-// Step 1: Create output directory if missing
-// ----------------------------------------------------------------------------
-if (!fs.existsSync(GEN_DIR)) fs.mkdirSync(GEN_DIR, { recursive: true });
+// Platform-specific paths for protoc and ts-proto plugin
+const PROTOC = process.platform === "win32"
+  ? path.join(ROOT_DIR, "node_modules/.bin/protoc.cmd")
+  : path.join(ROOT_DIR, "node_modules/.bin/protoc");
+
+const TS_PROTO_PLUGIN = process.platform === "win32"
+  ? path.join(ROOT_DIR, "node_modules/.bin/protoc-gen-ts_proto.cmd")
+  : path.join(ROOT_DIR, "node_modules/.bin/protoc-gen-ts_proto");
 
 // ----------------------------------------------------------------------------
-// Step 2: Find all .proto files
+// Pre-checks
 // ----------------------------------------------------------------------------
+
+if (!fs.existsSync(PROTOC)) {
+  console.error("❌ protoc not found. Run: pnpm add -D protoc");
+  process.exit(1);
+}
+
+if (!fs.existsSync(TS_PROTO_PLUGIN)) {
+  console.error(
+    "❌ protoc-gen-ts_proto not found. Run: pnpm add -D ts-proto"
+  );
+  process.exit(1);
+}
+
+// ----------------------------------------------------------------------------
+// Step 1: Create output directory
+// ----------------------------------------------------------------------------
+
+fs.mkdirSync(GEN_DIR, { recursive: true });
+
+// ----------------------------------------------------------------------------
+// Step 2: Find all .proto files (cross-platform)
+// ----------------------------------------------------------------------------
+
 console.log("🔍 Scanning for .proto files...");
-const protos = execSync(`find ${PROTO_SRC} -name "*.proto"`, {
-  encoding: "utf8",
-})
-  .split("\n")
-  .filter(Boolean);
 
-if (protos.length === 0) {
+const protos = fg.sync("**/*.proto", {
+  cwd: PROTO_SRC,
+  absolute: true,
+});
+
+if (!protos.length) {
   console.log("⚠️  No .proto files found.");
   process.exit(0);
 }
 
 // ----------------------------------------------------------------------------
-// Step 3: Generate TypeScript proto output using ts-proto
+// Step 3: Generate TypeScript using ts-proto
 // ----------------------------------------------------------------------------
-console.log("🔧 Generating TypeScript from protobuf...");
 
 const cmd = [
-  "protoc",
-  `--plugin=protoc-gen-ts_proto=./node_modules/.bin/protoc-gen-ts_proto`,
-  `--ts_proto_out=${GEN_DIR}`,
-  `--ts_proto_opt=useOptionals=messages,esModuleInterop=true`,
-  `-I ${PROTO_SRC}`,
-  ...protos,
+  `"${PROTOC}"`,
+  `--plugin=protoc-gen-ts_proto="${TS_PROTO_PLUGIN}"`,
+  `--ts_proto_out="${GEN_DIR}"`,
+  `--ts_proto_opt=useOptionals=messages,esModuleInterop=true,exportCommonSymbols=false`,
+  `-I "${PROTO_SRC}"`,
+  ...protos.map((p) => `"${p}"`),
 ].join(" ");
 
-console.log("▶️ Running:", cmd);
 execSync(cmd, { stdio: "inherit" });
 
-console.log("✅ Protobuf generation completed.");
+// ----------------------------------------------------------------------------
+// Step 4: Generate index.ts barrel file
+// ----------------------------------------------------------------------------
 
-// ----------------------------------------------------------------------------
-// Step 4: Generate a clean index.ts (no duplicates, always fresh)
-// ----------------------------------------------------------------------------
 console.log("🧠 Generating index.ts barrel file...");
 
-// Read all .ts files inside generated/
 const generatedFiles = fs
   .readdirSync(GEN_DIR)
-  .filter((file) => file.endsWith(".ts") && !file.endsWith(".d.ts"));
+  .filter(
+    (file) =>
+      file.endsWith(".ts") &&
+      !file.endsWith(".d.ts") &&
+      file !== "index.ts"
+  );
 
 if (!generatedFiles.length) {
-  console.log("⚠️ No generated .ts files found. Skipping index.ts creation.");
+  console.log("⚠️ No generated .ts files found.");
   process.exit(0);
 }
 
-// Always rewrite index.ts from scratch (avoids duplicates)
 const exportLines = generatedFiles.map((file) => {
-  const fileName = file.replace(".ts", "");
-  return `export * from "./generated/${fileName}";`;
+  const name = file.replace(".ts", "");
+  return `export * from "./generated/${name}";`;
 });
 
-// Ensure directory exists (e.g., first-time run)
 fs.mkdirSync(path.dirname(INDEX_FILE), { recursive: true });
-
-// Write clean exports
 fs.writeFileSync(INDEX_FILE, exportLines.join("\n") + "\n");
 
 console.log("✅ index.ts generated successfully.");
