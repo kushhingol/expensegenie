@@ -1,14 +1,15 @@
 syntax = "proto3";
 package expensegenie;
+import "google/protobuf/timestamp.proto";
 
 
 message Template {
-  string                id           = 1;
-  string                user_id       = 2;
-  string                name         = 3;
-  bool                  is_public     = 4;
-  string                created_at    = 5;
-  repeated CustomFields custom_fields = 6;
+  string                    id            = 1;
+  string                    user_id       = 2;
+  string                    name          = 3;
+  bool                      is_public     = 4;
+  google.protobuf.Timestamp created_at    = 5;
+  repeated CustomFields     custom_fields = 6;
 }
 
 
