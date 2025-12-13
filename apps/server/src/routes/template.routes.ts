@@ -12,4 +12,10 @@ router.post(
   TemplateController.createTemplateController
 );
 
+router.delete(
+  "/delete/:templateId",
+  authenticateUser,
+  TemplateController.deleteTemplateController
+);
+
 export default router;
