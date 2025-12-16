@@ -6,8 +6,8 @@ export class TemplateService {
     return createTemplateFn(payload);
   }
 
-  static async deleteTemplateFn(templateId: string) {
-    return deleteTemplateFn(templateId);
+  static async softDeleteTemplateFn(templateId: string) {
+    return softDeleteTemplateFn(templateId);
   }
 
   static async updateTemplate(
@@ -45,18 +45,22 @@ export const createTemplateFn = async (payload: Omit<TemplateType, "id">) => {
     name: payload.name.trim(),
     isPublic: payload.isPublic || false,
     customFields: normalizedFields || [],
+    isDeleted: payload.isDeleted || false,
   });
 
   return template;
 };
 
-const deleteTemplateFn = async (templateId: string) => {
-  const deletedTemplate = await TemplateModel.findByIdAndDelete(templateId);
-  if (!deletedTemplate) {
+const softDeleteTemplateFn = async (templateId: string) => {
+  const softDeleteTemplate = await TemplateModel.findByIdAndUpdate(templateId, {
+    isDeleted: true,
+  });
+
+  if (!softDeleteTemplate) {
     throw new Error("Failed to delete template");
   }
 
-  return deletedTemplate;
+  return softDeleteTemplate;
 };
 
 const updateTemplateFn = async (
@@ -83,6 +87,7 @@ const updateTemplateFn = async (
     name: payload.name.trim(),
     isPublic: payload.isPublic,
     customFields: normalizedFields || [],
+    isDeleted: payload.isDeleted || false,
   });
 
   if (!updateTemplate) {
@@ -111,7 +116,7 @@ const getTemplatesFn = async (userId: string) => {
   }
 
   const templates = await TemplateModel.find({
-    $or: [{ userId: userId }],
+    $and: [{ userId: userId }, { isDeleted: false }],
   });
 
   if (!templates) {

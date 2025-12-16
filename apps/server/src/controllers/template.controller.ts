@@ -41,6 +41,7 @@ const createTemplateControllerFn = async (req: Request, res: Response) => {
       name,
       isPublic,
       customFields,
+      isDeleted: false,
     });
 
     return res.status(201).json({
@@ -58,7 +59,8 @@ const createTemplateControllerFn = async (req: Request, res: Response) => {
 const deleteTemplateControllerMethod = async (req: Request, res: Response) => {
   try {
     const templateId = req?.params?.templateId;
-    const deletedTemplate = await TemplateService.deleteTemplateFn(templateId);
+    const deletedTemplate =
+      await TemplateService.softDeleteTemplateFn(templateId);
     if (!deletedTemplate) {
       return res.status(400).json({
         message: "Failed to delete template Id",
@@ -93,6 +95,7 @@ const updateTemplateontrollerMethod = async (req: Request, res: Response) => {
       isPublic,
       name,
       userId: userIdFromToken || userId,
+      isDeleted: false,
     });
 
     if (!updateTemplate) {

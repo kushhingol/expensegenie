@@ -40,6 +40,7 @@ const templateSchema = new mongoose.Schema<TemplateDocument>(
         message: "At leat one custom field is required",
       },
     },
+    isDeleted: { type: Boolean, default: false },
   },
   {
     timestamps: { createdAt: true, updatedAt: true },
