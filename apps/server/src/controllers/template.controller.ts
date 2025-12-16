@@ -14,6 +14,14 @@ export class TemplateController {
   static async updateTemplateController(req: Request, res: Response) {
     return updateTemplateontrollerMethod(req, res);
   }
+
+  static async getTemplateBytemplateIdController(req: Request, res: Response) {
+    return getTemplateByTemplateIdControllerMethod(req, res);
+  }
+
+  static async getTemplatesController(req: Request, res: Response) {
+    return getTemplatesControllerMethod(req, res);
+  }
 }
 
 const createTemplateControllerFn = async (req: Request, res: Response) => {
@@ -97,6 +105,47 @@ const updateTemplateontrollerMethod = async (req: Request, res: Response) => {
   } catch (err: any) {
     return res.status(500).json({
       message: err.message || "Failed to update template",
+    });
+  }
+};
+
+const getTemplateByTemplateIdControllerMethod = async (
+  req: Request,
+  res: Response
+) => {
+  try {
+    const templateId = req?.params?.templateId;
+    const templateDetails =
+      await TemplateService.getTemplateByTemplateId(templateId);
+    if (!templateDetails) {
+      throw new Error("Template not found");
+    }
+
+    return res.status(200).json({
+      message: "Template fetched successfully",
+      data: templateDetails,
+    });
+  } catch (err: any) {
+    return res.status(500).json({
+      message: err.message || "Failed to get template",
+    });
+  }
+};
+
+const getTemplatesControllerMethod = async (req: Request, res: Response) => {
+  try {
+    const userId = getUserIdFromRequest(req);
+    const templates = await TemplateService.getTemplates(userId);
+    if (!templates) {
+      throw new Error("No templates found");
+    }
+    return res.status(200).json({
+      message: "Templates fetched successfully",
+      data: templates,
+    });
+  } catch (err: any) {
+    return res.status(500).json({
+      message: err.message || "Failed to get templates",
     });
   }
 };

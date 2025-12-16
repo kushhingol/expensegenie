@@ -16,6 +16,14 @@ export class TemplateService {
   ) {
     return updateTemplateFn(templateId, payload);
   }
+
+  static async getTemplateByTemplateId(templateId: string) {
+    return getTemplateByTemplateIdFn(templateId);
+  }
+
+  static async getTemplates(userId: string) {
+    return getTemplatesFn(userId);
+  }
 }
 
 export const createTemplateFn = async (payload: Omit<TemplateType, "id">) => {
@@ -82,4 +90,33 @@ const updateTemplateFn = async (
   }
 
   return updateTemplate;
+};
+
+const getTemplateByTemplateIdFn = async (templateId: string) => {
+  if (!templateId) {
+    throw new Error("templateId is missing");
+  }
+
+  const templateDetails = await TemplateModel.findById(templateId);
+  if (!templateDetails) {
+    throw new Error("Template not found");
+  }
+
+  return templateDetails;
+};
+
+const getTemplatesFn = async (userId: string) => {
+  if (!userId) {
+    throw new Error("userId is missing");
+  }
+
+  const templates = await TemplateModel.find({
+    $or: [{ userId: userId }],
+  });
+
+  if (!templates) {
+    throw new Error("No templates found");
+  }
+
+  return templates;
 };

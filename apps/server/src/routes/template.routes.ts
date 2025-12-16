@@ -25,4 +25,12 @@ router.put(
   TemplateController.updateTemplateController
 );
 
+router.get(
+  "/:templateId",
+  authenticateUser,
+  TemplateController.getTemplateBytemplateIdController
+);
+
+router.get("/", authenticateUser, TemplateController.getTemplatesController);
+
 export default router;
