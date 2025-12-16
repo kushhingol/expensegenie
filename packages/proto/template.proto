@@ -9,6 +9,7 @@ message Template {
   bool                      is_public     = 3;
   google.protobuf.Timestamp created_at    = 4;
   repeated CustomFields     custom_fields = 5;
+  bool                      is_deleted    = 6;
 }
 
 

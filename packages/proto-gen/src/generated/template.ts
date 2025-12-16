@@ -223,6 +223,7 @@ export interface Template {
   isPublic: boolean;
   createdAt?: Date | undefined;
   customFields: CustomFields[];
+  isDeleted: boolean;
 }
 
 export interface CustomFields {
@@ -233,7 +234,7 @@ export interface CustomFields {
 }
 
 function createBaseTemplate(): Template {
-  return { userId: "", name: "", isPublic: false, createdAt: undefined, customFields: [] };
+  return { userId: "", name: "", isPublic: false, createdAt: undefined, customFields: [], isDeleted: false };
 }
 
 export const Template: MessageFns<Template> = {
@@ -252,6 +253,9 @@ export const Template: MessageFns<Template> = {
     }
     for (const v of message.customFields) {
       CustomFields.encode(v!, writer.uint32(42).fork()).join();
+    }
+    if (message.isDeleted !== false) {
+      writer.uint32(48).bool(message.isDeleted);
     }
     return writer;
   },
@@ -303,6 +307,14 @@ export const Template: MessageFns<Template> = {
           message.customFields.push(CustomFields.decode(reader, reader.uint32()));
           continue;
         }
+        case 6: {
+          if (tag !== 48) {
+            break;
+          }
+
+          message.isDeleted = reader.bool();
+          continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -321,6 +333,7 @@ export const Template: MessageFns<Template> = {
       customFields: globalThis.Array.isArray(object?.customFields)
         ? object.customFields.map((e: any) => CustomFields.fromJSON(e))
         : [],
+      isDeleted: isSet(object.isDeleted) ? globalThis.Boolean(object.isDeleted) : false,
     };
   },
 
@@ -341,6 +354,9 @@ export const Template: MessageFns<Template> = {
     if (message.customFields?.length) {
       obj.customFields = message.customFields.map((e) => CustomFields.toJSON(e));
     }
+    if (message.isDeleted !== false) {
+      obj.isDeleted = message.isDeleted;
+    }
     return obj;
   },
 
@@ -354,6 +370,7 @@ export const Template: MessageFns<Template> = {
     message.isPublic = object.isPublic ?? false;
     message.createdAt = object.createdAt ?? undefined;
     message.customFields = object.customFields?.map((e) => CustomFields.fromPartial(e)) || [];
+    message.isDeleted = object.isDeleted ?? false;
     return message;
   },
 };
