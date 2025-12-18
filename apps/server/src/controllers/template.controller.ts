@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { TemplateService } from "../services/template/template.service";
 import { getUserIdFromRequest } from "../utils/user.utils";
+import { ApiResponseUtil } from "../utils/response.utils";
 
 export class TemplateController {
   static async createTemplateController(req: Request, res: Response) {
@@ -31,8 +32,10 @@ const createTemplateControllerFn = async (req: Request, res: Response) => {
     const userIdFromToken = getUserIdFromRequest(req);
 
     if (!name || !customFields) {
-      return res.status(400).json({
-        message: "name and customFields are required",
+      return ApiResponseUtil.sendErrorResponse({
+        res,
+        statusCode: 400,
+        errorMessage: "name and customFields are required",
       });
     }
 
@@ -44,14 +47,18 @@ const createTemplateControllerFn = async (req: Request, res: Response) => {
       isDeleted: false,
     });
 
-    return res.status(201).json({
+    return ApiResponseUtil.sendResponse({
+      res,
+      statusCode: 201,
       message: "Template created successfully",
       data: template,
     });
   } catch (error: any) {
     console.log("Create Template Error:", error);
-    return res.status(400).json({
-      message: error.message || "Failed to create template",
+    return ApiResponseUtil.sendErrorResponse({
+      res,
+      statusCode: 400,
+      errorMessage: error.message || "Failed to create template",
     });
   }
 };
@@ -62,16 +69,23 @@ const deleteTemplateControllerMethod = async (req: Request, res: Response) => {
     const deletedTemplate =
       await TemplateService.softDeleteTemplateFn(templateId);
     if (!deletedTemplate) {
-      return res.status(400).json({
-        message: "Failed to delete template Id",
+      return ApiResponseUtil.sendErrorResponse({
+        res,
+        statusCode: 400,
+        errorMessage: "Failed to delete template Id",
       });
     }
-    return res.status(200).json({
+
+    return ApiResponseUtil.sendResponse({
+      res,
+      statusCode: 200,
       message: "Template successfully deleted",
     });
   } catch (err: any) {
-    return res.status(500).json({
-      message: err?.message || "Failed to delete template",
+    return ApiResponseUtil.sendErrorResponse({
+      res,
+      statusCode: 500,
+      errorMessage: err?.message || "Failed to delete template",
     });
   }
 };
@@ -85,8 +99,10 @@ const updateTemplateontrollerMethod = async (req: Request, res: Response) => {
     const userIdFromToken = getUserIdFromRequest(req);
 
     if (!name || !customFields) {
-      return res.status(400).json({
-        message: "name and customFields are required",
+      return ApiResponseUtil.sendErrorResponse({
+        res,
+        statusCode: 400,
+        errorMessage: "name and customFields are required",
       });
     }
 
@@ -102,12 +118,16 @@ const updateTemplateontrollerMethod = async (req: Request, res: Response) => {
       throw new Error("Failted to update template");
     }
 
-    return res.status(200).json({
-      message: "Tempate Updated successfully",
+    return ApiResponseUtil.sendResponse({
+      res,
+      statusCode: 200,
+      message: "Template Updated successfully",
     });
   } catch (err: any) {
-    return res.status(500).json({
-      message: err.message || "Failed to update template",
+    return ApiResponseUtil.sendErrorResponse({
+      res,
+      statusCode: 500,
+      errorMessage: err?.message || "Failed to update template",
     });
   }
 };
@@ -124,13 +144,17 @@ const getTemplateByTemplateIdControllerMethod = async (
       throw new Error("Template not found");
     }
 
-    return res.status(200).json({
+    return ApiResponseUtil.sendResponse({
+      res,
+      statusCode: 200,
       message: "Template fetched successfully",
       data: templateDetails,
     });
   } catch (err: any) {
-    return res.status(500).json({
-      message: err.message || "Failed to get template",
+    return ApiResponseUtil.sendErrorResponse({
+      res,
+      statusCode: 500,
+      errorMessage: err?.message || "Failed to get template",
     });
   }
 };
@@ -142,13 +166,18 @@ const getTemplatesControllerMethod = async (req: Request, res: Response) => {
     if (!templates) {
       throw new Error("No templates found");
     }
-    return res.status(200).json({
+
+    return ApiResponseUtil.sendResponse({
+      res,
+      statusCode: 200,
       message: "Templates fetched successfully",
       data: templates,
     });
   } catch (err: any) {
-    return res.status(500).json({
-      message: err.message || "Failed to get templates",
+    return ApiResponseUtil.sendErrorResponse({
+      res,
+      statusCode: 500,
+      errorMessage: err?.message || "Failed to get templates",
     });
   }
 };
