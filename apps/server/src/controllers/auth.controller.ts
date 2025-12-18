@@ -4,6 +4,7 @@ import {
   createOrGetUser,
   generateJWT,
 } from "../services/auth/auth.service";
+import { ApiResponseUtil } from "../utils/response.utils";
 
 export const googleLogin = async (req: Request, res: Response) => {
   try {
@@ -17,9 +18,18 @@ export const googleLogin = async (req: Request, res: Response) => {
     const user = await createOrGetUser(payload);
     const jwtToken = generateJWT(user._id.toString());
 
-    return res.json({ user, token: jwtToken });
+    return ApiResponseUtil.sendResponse({
+      res,
+      statusCode: 200,
+      message: "Login successful",
+      data: { user, token: jwtToken },
+    });
   } catch (error) {
     console.error("Login Error:", error);
-    res.status(500).json({ message: "Internal server error" });
+    return ApiResponseUtil.sendErrorResponse({
+      res,
+      statusCode: 500,
+      errorMessage: "Internal server error",
+    });
   }
 };
