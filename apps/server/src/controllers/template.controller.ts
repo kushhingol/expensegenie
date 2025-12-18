@@ -67,7 +67,7 @@ const deleteTemplateControllerMethod = async (req: Request, res: Response) => {
   try {
     const templateId = req?.params?.templateId;
     const deletedTemplate =
-      await TemplateService.softDeleteTemplateFn(templateId);
+      await TemplateService.softDeleteTemplate(templateId);
     if (!deletedTemplate) {
       return ApiResponseUtil.sendErrorResponse({
         res,
@@ -165,6 +165,15 @@ const getTemplatesControllerMethod = async (req: Request, res: Response) => {
     const templates = await TemplateService.getTemplates(userId);
     if (!templates) {
       throw new Error("No templates found");
+    }
+
+    if (!templates.length) {
+      return ApiResponseUtil.sendResponse({
+        res,
+        statusCode: 200,
+        message: "No templates found",
+        data: [],
+      });
     }
 
     return ApiResponseUtil.sendResponse({

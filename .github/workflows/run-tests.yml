@@ -32,6 +32,12 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
+      - name: Clean all build proto files
+        run: pnpm run proto:clean
+
+      - name: Build proto packages
+        run: pnpm run proto:generate
+
       - name: Run server tests
         env:
           JWT_SECRET: test-secret # required by your test cases
