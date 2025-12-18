@@ -1,0 +1,161 @@
+{
+  "info": {
+    "name": "ExpenseGenie Templates",
+    "_postman_id": "expensegenie-templates-collection",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Create Template",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{TOKEN}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Sample Expense Template\",\n  \"isPublic\": false,\n  \"customFields\": [\n    {\n      \"label\": \"Amount\",\n      \"type\": \"NUMBER\",\n      \"required\": true\n    },\n    {\n      \"label\": \"Category\",\n      \"type\": \"SELECT\",\n      \"options\": [\"Food\", \"Transport\", \"Entertainment\"],\n      \"required\": true\n    }\n  ]\n}"
+        },
+        "url": {
+          "raw": "{{API_URL}}/api/templates/create",
+          "host": [
+            "{{API_URL}}"
+          ],
+          "path": [
+            "api",
+            "templates",
+            "create"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get All Templates",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{TOKEN}}"
+          }
+        ],
+        "url": {
+          "raw": "{{API_URL}}/api/templates/",
+          "host": [
+            "{{API_URL}}"
+          ],
+          "path": [
+            "api",
+            "templates",
+            ""
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get Template by ID",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{TOKEN}}"
+          }
+        ],
+        "url": {
+          "raw": "{{API_URL}}/api/templates/{{TEMPLATE_ID}}",
+          "host": [
+            "{{API_URL}}"
+          ],
+          "path": [
+            "api",
+            "templates",
+            "{{TEMPLATE_ID}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Update Template",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{TOKEN}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Updated Expense Template\",\n  \"isPublic\": true,\n  \"customFields\": [\n    {\n      \"label\": \"Amount\",\n      \"type\": \"NUMBER\",\n      \"required\": true\n    },\n    {\n      \"label\": \"Category\",\n      \"type\": \"SELECT\",\n      \"options\": [\"Food\", \"Transport\", \"Entertainment\", \"Other\"],\n      \"required\": true\n    }\n  ]\n}"
+        },
+        "url": {
+          "raw": "{{API_URL}}/api/templates/edit/{{TEMPLATE_ID}}",
+          "host": [
+            "{{API_URL}}"
+          ],
+          "path": [
+            "api",
+            "templates",
+            "edit",
+            "{{TEMPLATE_ID}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Delete Template",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{TOKEN}}"
+          }
+        ],
+        "url": {
+          "raw": "{{API_URL}}/api/templates/delete/{{TEMPLATE_ID}}",
+          "host": [
+            "{{API_URL}}"
+          ],
+          "path": [
+            "api",
+            "templates",
+            "delete",
+            "{{TEMPLATE_ID}}"
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "variable": [
+    {
+      "key": "API_URL",
+      "value": "http://localhost:4000"
+    },
+    {
+      "key": "TOKEN",
+      "value": ""
+    },
+    {
+      "key": "TEMPLATE_ID",
+      "value": ""
+    }
+  ]
+}
