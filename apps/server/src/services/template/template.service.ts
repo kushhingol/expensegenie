@@ -6,7 +6,7 @@ export class TemplateService {
     return createTemplateFn(payload);
   }
 
-  static async softDeleteTemplateFn(templateId: string) {
+  static async softDeleteTemplate(templateId: string) {
     return softDeleteTemplateFn(templateId);
   }
 
@@ -26,7 +26,7 @@ export class TemplateService {
   }
 }
 
-export const createTemplateFn = async (payload: Omit<TemplateType, "id">) => {
+const createTemplateFn = async (payload: Omit<TemplateType, "id">) => {
   if (!payload.customFields || payload.customFields.length === 0) {
     throw new Error(
       "At least one custom field is required to create a template"
@@ -119,7 +119,7 @@ const getTemplatesFn = async (userId: string) => {
     $and: [{ userId: userId }, { isDeleted: false }],
   });
 
-  if (!templates) {
+  if (!templates || !templates.length) {
     throw new Error("No templates found");
   }
 
