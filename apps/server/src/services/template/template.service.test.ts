@@ -24,6 +24,8 @@ describe("Template Service Tests", () => {
         { label: "Field1", type: FieldType.TEXT, options: [], required: true },
       ],
       isDeleted: false,
+      createdBy: "user123",
+      updatedBy: "user123",
     };
 
     it("should create a template successfully with valid payload", async () => {
@@ -43,6 +45,8 @@ describe("Template Service Tests", () => {
           required: field.required || false,
         })),
         isDeleted: validPayload.isDeleted,
+        createdBy: validPayload.userId,
+        updatedBy: validPayload.userId,
       });
       expect(result).toEqual(mockTemplate);
     });
@@ -89,6 +93,8 @@ describe("Template Service Tests", () => {
               required: true,
             },
           ],
+          createdBy: "user123",
+          updatedBy: "user123",
         })
       );
     });
@@ -96,14 +102,21 @@ describe("Template Service Tests", () => {
 
   describe("softDeleteTemplateFn", () => {
     it("should soft delete a template successfully", async () => {
-      const mockTemplate = { id: "template123", isDeleted: true };
+      const mockTemplate = {
+        id: "template123",
+        isDeleted: true,
+        updatedBy: "user123",
+      };
       mockTemplateModel.findByIdAndUpdate.mockResolvedValue(mockTemplate);
 
-      const result = await TemplateService.softDeleteTemplate("template123");
+      const result = await TemplateService.softDeleteTemplate(
+        "template123",
+        "user123"
+      );
 
       expect(mockTemplateModel.findByIdAndUpdate).toHaveBeenCalledWith(
         "template123",
-        { isDeleted: true }
+        { isDeleted: true, updatedBy: "user123" }
       );
       expect(result).toEqual(mockTemplate);
     });
@@ -112,12 +125,32 @@ describe("Template Service Tests", () => {
       mockTemplateModel.findByIdAndUpdate.mockResolvedValue(null);
 
       await expect(
-        TemplateService.softDeleteTemplate("invalidId")
+        TemplateService.softDeleteTemplate("invalidId", "user123")
       ).rejects.toThrow("Failed to delete template");
       expect(mockTemplateModel.findByIdAndUpdate).toHaveBeenCalledWith(
         "invalidId",
-        { isDeleted: true }
+        { isDeleted: true, updatedBy: "user123" }
       );
+    });
+
+    it("should return error if templateId is missing", async () => {
+      const templateId = "";
+
+      await expect(
+        TemplateService.softDeleteTemplate(templateId, "user123")
+      ).rejects.toThrow("templateId is missing");
+
+      expect(mockTemplateModel.findByIdAndUpdate).not.toHaveBeenCalled();
+    });
+
+    it("should return error if userId is missing", async () => {
+      const userId = "";
+      const templateId = "template123";
+
+      await expect(
+        TemplateService.softDeleteTemplate(templateId, userId)
+      ).rejects.toThrow("userId is missing");
+      expect(mockTemplateModel.findByIdAndUpdate).not.toHaveBeenCalled();
     });
   });
 
@@ -135,6 +168,8 @@ describe("Template Service Tests", () => {
         },
       ],
       isDeleted: false,
+      createdBy: "user123",
+      updatedBy: "user123",
     };
 
     it("should update a template successfully", async () => {
@@ -161,6 +196,7 @@ describe("Template Service Tests", () => {
             },
           ],
           isDeleted: false,
+          updatedBy: "user123",
         }
       );
       expect(result).toEqual(mockTemplate);

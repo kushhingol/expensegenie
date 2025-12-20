@@ -6,13 +6,13 @@ export class TemplateService {
     return createTemplateFn(payload);
   }
 
-  static async softDeleteTemplate(templateId: string) {
-    return softDeleteTemplateFn(templateId);
+  static async softDeleteTemplate(templateId: string, userId: string) {
+    return softDeleteTemplateFn(templateId, userId);
   }
 
   static async updateTemplate(
     templateId: string,
-    payload: Omit<TemplateType, "id">
+    payload: Omit<TemplateType, "id" | "createdBy">
   ) {
     return updateTemplateFn(templateId, payload);
   }
@@ -46,14 +46,25 @@ const createTemplateFn = async (payload: Omit<TemplateType, "id">) => {
     isPublic: payload.isPublic || false,
     customFields: normalizedFields || [],
     isDeleted: payload.isDeleted || false,
+    createdBy: payload.userId,
+    updatedBy: payload.userId,
   });
 
   return template;
 };
 
-const softDeleteTemplateFn = async (templateId: string) => {
+const softDeleteTemplateFn = async (templateId: string, userId: string) => {
+  if (!templateId) {
+    throw new Error("templateId is missing");
+  }
+
+  if (!userId) {
+    throw new Error("userId is missing");
+  }
+
   const softDeleteTemplate = await TemplateModel.findByIdAndUpdate(templateId, {
     isDeleted: true,
+    updatedBy: userId,
   });
 
   if (!softDeleteTemplate) {
@@ -65,7 +76,7 @@ const softDeleteTemplateFn = async (templateId: string) => {
 
 const updateTemplateFn = async (
   templateId: string,
-  payload: Omit<TemplateType, "id">
+  payload: Omit<TemplateType, "id" | "createdBy">
 ) => {
   if (!templateId) {
     throw new Error("templateId is missing");
@@ -88,6 +99,7 @@ const updateTemplateFn = async (
     isPublic: payload.isPublic,
     customFields: normalizedFields || [],
     isDeleted: payload.isDeleted || false,
+    updatedBy: payload.userId,
   });
 
   if (!updateTemplate) {

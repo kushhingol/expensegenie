@@ -45,6 +45,8 @@ const createTemplateControllerFn = async (req: Request, res: Response) => {
       isPublic,
       customFields,
       isDeleted: false,
+      createdBy: userIdFromToken || userId,
+      updatedBy: userIdFromToken || userId,
     });
 
     return ApiResponseUtil.sendResponse({
@@ -65,9 +67,12 @@ const createTemplateControllerFn = async (req: Request, res: Response) => {
 
 const deleteTemplateControllerMethod = async (req: Request, res: Response) => {
   try {
+    const userId = getUserIdFromRequest(req);
     const templateId = req?.params?.templateId;
-    const deletedTemplate =
-      await TemplateService.softDeleteTemplate(templateId);
+    const deletedTemplate = await TemplateService.softDeleteTemplate(
+      templateId,
+      userId
+    );
     if (!deletedTemplate) {
       return ApiResponseUtil.sendErrorResponse({
         res,
@@ -112,6 +117,7 @@ const updateTemplateontrollerMethod = async (req: Request, res: Response) => {
       name,
       userId: userIdFromToken || userId,
       isDeleted: false,
+      updatedBy: userIdFromToken || userId,
     });
 
     if (!updateTemplate) {

@@ -21,7 +21,7 @@
         ],
         "body": {
           "mode": "raw",
-          "raw": "{\n  \"name\": \"Sample Expense Template\",\n  \"isPublic\": false,\n  \"customFields\": [\n    {\n      \"label\": \"Amount\",\n      \"type\": \"NUMBER\",\n      \"required\": true\n    },\n    {\n      \"label\": \"Category\",\n      \"type\": \"SELECT\",\n      \"options\": [\"Food\", \"Transport\", \"Entertainment\"],\n      \"required\": true\n    }\n  ]\n}"
+          "raw": "{\n  \"name\": \"Sample Expense Template\",\n  \"isPublic\": false,\n  \"customFields\": [\n    {\n      \"label\": \"Amount\",\n      \"type\": \"NUMBER\",\n      \"required\": true\n    },\n    {\n      \"label\": \"Category\",\n      \"type\": \"DROPDOWN\",\n      \"options\": [\"Food\", \"Transport\", \"Entertainment\"],\n      \"required\": true\n    }\n  ]\n}"
         },
         "url": {
           "raw": "{{API_URL}}/api/templates/create",
@@ -101,7 +101,7 @@
         ],
         "body": {
           "mode": "raw",
-          "raw": "{\n  \"name\": \"Updated Expense Template\",\n  \"isPublic\": true,\n  \"customFields\": [\n    {\n      \"label\": \"Amount\",\n      \"type\": \"NUMBER\",\n      \"required\": true\n    },\n    {\n      \"label\": \"Category\",\n      \"type\": \"SELECT\",\n      \"options\": [\"Food\", \"Transport\", \"Entertainment\", \"Other\"],\n      \"required\": true\n    }\n  ]\n}"
+          "raw": "{\n  \"name\": \"Updated Expense Template\",\n  \"isPublic\": true,\n  \"customFields\": [\n    {\n      \"label\": \"Amount\",\n      \"type\": \"NUMBER\",\n      \"required\": true\n    },\n    {\n      \"label\": \"Category\",\n      \"type\": \"DROPDOWN\",\n      \"options\": [\"Food\", \"Transport\", \"Entertainment\", \"Other\"],\n      \"required\": true\n    }\n  ]\n}"
         },
         "url": {
           "raw": "{{API_URL}}/api/templates/edit/{{TEMPLATE_ID}}",

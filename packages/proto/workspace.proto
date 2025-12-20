@@ -1,0 +1,15 @@
+syntax = "proto3";
+package expensegenie;
+import "google/protobuf/timestamp.proto";
+
+message Workspace {
+  string                    user_id     = 1;
+  string                    name        = 2;
+  string                    template_id = 3;
+  repeated string           tags        = 4;
+  bool                      is_deleted  = 5;
+  google.protobuf.Timestamp created_at  = 6;
+  google.protobuf.Timestamp updated_at  = 7;
+  string                    created_by  = 8;
+  string                    updated_by  = 9;
+}
