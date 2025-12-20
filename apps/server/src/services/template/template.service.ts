@@ -62,10 +62,16 @@ const softDeleteTemplateFn = async (templateId: string, userId: string) => {
     throw new Error("userId is missing");
   }
 
-  const softDeleteTemplate = await TemplateModel.findByIdAndUpdate(templateId, {
-    isDeleted: true,
-    updatedBy: userId,
-  });
+  const softDeleteTemplate = await TemplateModel.findByIdAndUpdate(
+    templateId,
+    {
+      isDeleted: true,
+      updatedBy: userId,
+    },
+    {
+      new: true,
+    }
+  );
 
   if (!softDeleteTemplate) {
     throw new Error("Failed to delete template");
@@ -93,14 +99,20 @@ const updateTemplateFn = async (
     required: field.required || false,
   }));
 
-  const updateTemplate = await TemplateModel.findByIdAndUpdate(templateId, {
-    userId: payload.userId,
-    name: payload.name.trim(),
-    isPublic: payload.isPublic,
-    customFields: normalizedFields || [],
-    isDeleted: payload.isDeleted || false,
-    updatedBy: payload.userId,
-  });
+  const updateTemplate = await TemplateModel.findByIdAndUpdate(
+    templateId,
+    {
+      userId: payload.userId,
+      name: payload.name.trim(),
+      isPublic: payload.isPublic,
+      customFields: normalizedFields || [],
+      isDeleted: payload.isDeleted || false,
+      updatedBy: payload.userId,
+    },
+    {
+      new: true,
+    }
+  );
 
   if (!updateTemplate) {
     throw new Error("Failed to update template");
