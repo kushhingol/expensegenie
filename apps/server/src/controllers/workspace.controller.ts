@@ -7,6 +7,10 @@ export class WorkspaceController {
   static async createWorkspaceController(req: Request, res: Response) {
     return createWorkspaceControllerFn(req, res);
   }
+
+  static async deleteWorkspaceController(req: Request, res: Response) {
+    return softDeleteWorkspaceControllerFn(req, res);
+  }
 }
 
 const createWorkspaceControllerFn = async (req: Request, res: Response) => {
@@ -48,6 +52,46 @@ const createWorkspaceControllerFn = async (req: Request, res: Response) => {
     });
   } catch (error: any) {
     console.log("Create Workspace Error:", error);
+    return ApiResponseUtil.sendErrorResponse({
+      res,
+      statusCode: 500,
+      errorMessage: "Internal server error",
+    });
+  }
+};
+
+const softDeleteWorkspaceControllerFn = async (req: Request, res: Response) => {
+  try {
+    const { workspaceId } = req.params;
+    const userIdFromToken = getUserIdFromRequest(req);
+    if (!workspaceId) {
+      return ApiResponseUtil.sendErrorResponse({
+        res,
+        statusCode: 400,
+        errorMessage: "Workspace ID is required",
+      });
+    }
+    const workspace = await WorkspaceService.softDeleteWorkspace(
+      workspaceId,
+      userIdFromToken || ""
+    );
+
+    if (!workspace) {
+      return ApiResponseUtil.sendErrorResponse({
+        res,
+        statusCode: 500,
+        errorMessage: "Failed to delete workspace",
+      });
+    }
+
+    return ApiResponseUtil.sendResponse({
+      res,
+      statusCode: 200,
+      message: "Workspace deleted successfully",
+      data: workspace,
+    });
+  } catch (error: any) {
+    console.log("Soft Delete Workspace Error:", error);
     return ApiResponseUtil.sendErrorResponse({
       res,
       statusCode: 500,

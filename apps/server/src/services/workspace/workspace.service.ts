@@ -5,6 +5,10 @@ export class WorkspaceService {
   static async createWorkspace(payload: Omit<WorkspaceType, "id">) {
     return createWorkspaceFn(payload);
   }
+
+  static async softDeleteWorkspace(workspaceId: string, userId: string) {
+    return softDeleteWorkspaceFn(workspaceId, userId);
+  }
 }
 
 const createWorkspaceFn = async (payload: Omit<WorkspaceType, "id">) => {
@@ -25,5 +29,29 @@ const createWorkspaceFn = async (payload: Omit<WorkspaceType, "id">) => {
     updatedBy: payload.userId,
   });
 
+  return workspace;
+};
+
+const softDeleteWorkspaceFn = async (workspaceId: string, userId: string) => {
+  if (!workspaceId || workspaceId.trim() === "") {
+    throw new Error("Workspace ID is required");
+  }
+
+  if (!userId || userId.trim() === "") {
+    throw new Error("User ID is required");
+  }
+
+  const workspace = await WorkspaceModel.findByIdAndUpdate(
+    workspaceId,
+    {
+      isDeleted: true,
+      updatedBy: userId,
+    },
+    { new: true }
+  );
+
+  if (!workspace) {
+    throw new Error("Failed to delete workspace");
+  }
   return workspace;
 };

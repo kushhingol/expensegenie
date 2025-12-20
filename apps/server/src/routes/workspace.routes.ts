@@ -10,4 +10,10 @@ router.post(
   WorkspaceController.createWorkspaceController
 );
 
+router.delete(
+  "/delete/:workspaceId",
+  authenticateUser,
+  WorkspaceController.deleteWorkspaceController
+);
+
 export default router;
