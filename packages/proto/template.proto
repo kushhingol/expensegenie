@@ -2,7 +2,6 @@ syntax = "proto3";
 package expensegenie;
 import "google/protobuf/timestamp.proto";
 
-
 message Template {
   string                    user_id       = 1;
   string                    name          = 2;
@@ -10,59 +9,59 @@ message Template {
   google.protobuf.Timestamp created_at    = 4;
   repeated CustomFields     custom_fields = 5;
   bool                      is_deleted    = 6;
+  google.protobuf.Timestamp updated_at    = 7;
+  string                    created_by    = 8;
+  string                    updated_by    = 9;
 }
-
 
 enum FieldType {
   FIELD_TYPE_UNSPECIFIED = 0;
 
   // Numeric
-  AMOUNT                 = 1;
-  NUMBER                 = 2;
-  PERCENTAGE             = 3;
+  AMOUNT     = 1;
+  NUMBER     = 2;
+  PERCENTAGE = 3;
 
   // Text
-  TEXT                   = 4;
-  TEXTAREA               = 5;
-  EMAIL                  = 6;
-  PHONE                  = 7;
-  URL                    = 8;
+  TEXT     = 4;
+  TEXTAREA = 5;
+  EMAIL    = 6;
+  PHONE    = 7;
+  URL      = 8;
 
   // Date
-  DATE                   = 9;
-  DATETIME               = 10;
-  MONTH_YEAR             = 11;
+  DATE       = 9;
+  DATETIME   = 10;
+  MONTH_YEAR = 11;
 
   // Selection
-  DROPDOWN               = 12;
-  MULTI_SELECT           = 13;
-  RADIO                  = 14;
-  CHECKBOX               = 15;
+  DROPDOWN     = 12;
+  MULTI_SELECT = 13;
+  RADIO        = 14;
+  CHECKBOX     = 15;
 
   // Expense specific
-  CATEGORY               = 16;
-  PAYMENT_MODE           = 17;
-  CURRENCY               = 18;
-  TAX_AMOUNT             = 19;
-  TAX_NUMBER             = 20;
-  INVOICE_NUMBER         = 21;
-  MERCHANT               = 22;
+  CATEGORY       = 16;
+  PAYMENT_MODE   = 17;
+  CURRENCY       = 18;
+  TAX_AMOUNT     = 19;
+  TAX_NUMBER     = 20;
+  INVOICE_NUMBER = 21;
+  MERCHANT       = 22;
 
   // Files
-  FILE                   = 23;
-  IMAGE                  = 24;
-  RECEIPT                = 25;
+  FILE    = 23;
+  IMAGE   = 24;
+  RECEIPT = 25;
 
   // Location / travel
-  LOCATION               = 26;
-  DISTANCE               = 27;
+  LOCATION = 26;
+  DISTANCE = 27;
 
   // Boolean / system
-  BOOLEAN                = 28;
-  AUTO_GENERATED         = 29;
+  BOOLEAN        = 28;
+  AUTO_GENERATED = 29;
 }
-
-
 
 message CustomFields {
   string          label    = 1;

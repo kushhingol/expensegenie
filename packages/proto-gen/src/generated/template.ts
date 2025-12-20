@@ -224,6 +224,9 @@ export interface Template {
   createdAt?: Date | undefined;
   customFields: CustomFields[];
   isDeleted: boolean;
+  updatedAt?: Date | undefined;
+  createdBy: string;
+  updatedBy: string;
 }
 
 export interface CustomFields {
@@ -234,7 +237,17 @@ export interface CustomFields {
 }
 
 function createBaseTemplate(): Template {
-  return { userId: "", name: "", isPublic: false, createdAt: undefined, customFields: [], isDeleted: false };
+  return {
+    userId: "",
+    name: "",
+    isPublic: false,
+    createdAt: undefined,
+    customFields: [],
+    isDeleted: false,
+    updatedAt: undefined,
+    createdBy: "",
+    updatedBy: "",
+  };
 }
 
 export const Template: MessageFns<Template> = {
@@ -256,6 +269,15 @@ export const Template: MessageFns<Template> = {
     }
     if (message.isDeleted !== false) {
       writer.uint32(48).bool(message.isDeleted);
+    }
+    if (message.updatedAt !== undefined) {
+      Timestamp.encode(toTimestamp(message.updatedAt), writer.uint32(58).fork()).join();
+    }
+    if (message.createdBy !== "") {
+      writer.uint32(66).string(message.createdBy);
+    }
+    if (message.updatedBy !== "") {
+      writer.uint32(74).string(message.updatedBy);
     }
     return writer;
   },
@@ -315,6 +337,30 @@ export const Template: MessageFns<Template> = {
           message.isDeleted = reader.bool();
           continue;
         }
+        case 7: {
+          if (tag !== 58) {
+            break;
+          }
+
+          message.updatedAt = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          continue;
+        }
+        case 8: {
+          if (tag !== 66) {
+            break;
+          }
+
+          message.createdBy = reader.string();
+          continue;
+        }
+        case 9: {
+          if (tag !== 74) {
+            break;
+          }
+
+          message.updatedBy = reader.string();
+          continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -334,6 +380,9 @@ export const Template: MessageFns<Template> = {
         ? object.customFields.map((e: any) => CustomFields.fromJSON(e))
         : [],
       isDeleted: isSet(object.isDeleted) ? globalThis.Boolean(object.isDeleted) : false,
+      updatedAt: isSet(object.updatedAt) ? fromJsonTimestamp(object.updatedAt) : undefined,
+      createdBy: isSet(object.createdBy) ? globalThis.String(object.createdBy) : "",
+      updatedBy: isSet(object.updatedBy) ? globalThis.String(object.updatedBy) : "",
     };
   },
 
@@ -357,6 +406,15 @@ export const Template: MessageFns<Template> = {
     if (message.isDeleted !== false) {
       obj.isDeleted = message.isDeleted;
     }
+    if (message.updatedAt !== undefined) {
+      obj.updatedAt = message.updatedAt.toISOString();
+    }
+    if (message.createdBy !== "") {
+      obj.createdBy = message.createdBy;
+    }
+    if (message.updatedBy !== "") {
+      obj.updatedBy = message.updatedBy;
+    }
     return obj;
   },
 
@@ -371,6 +429,9 @@ export const Template: MessageFns<Template> = {
     message.createdAt = object.createdAt ?? undefined;
     message.customFields = object.customFields?.map((e) => CustomFields.fromPartial(e)) || [];
     message.isDeleted = object.isDeleted ?? false;
+    message.updatedAt = object.updatedAt ?? undefined;
+    message.createdBy = object.createdBy ?? "";
+    message.updatedBy = object.updatedBy ?? "";
     return message;
   },
 };

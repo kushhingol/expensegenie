@@ -30,7 +30,7 @@ const templateSchema = new mongoose.Schema<TemplateDocument>(
     name: { type: String, required: true },
     userId: { type: String, required: true },
     isPublic: { type: Boolean, default: false },
-    createdAt: { type: Date, default: Date.now, required: true },
+    createdBy: { type: String, required: true },
     customFields: {
       type: [customFieldsSchema],
       required: true,
@@ -41,6 +41,7 @@ const templateSchema = new mongoose.Schema<TemplateDocument>(
       },
     },
     isDeleted: { type: Boolean, default: false },
+    updatedBy: { type: String, required: true },
   },
   {
     timestamps: { createdAt: true, updatedAt: true },
