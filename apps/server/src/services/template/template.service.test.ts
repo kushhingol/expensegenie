@@ -116,7 +116,8 @@ describe("Template Service Tests", () => {
 
       expect(mockTemplateModel.findByIdAndUpdate).toHaveBeenCalledWith(
         "template123",
-        { isDeleted: true, updatedBy: "user123" }
+        { isDeleted: true, updatedBy: "user123" },
+        { new: true }
       );
       expect(result).toEqual(mockTemplate);
     });
@@ -129,7 +130,8 @@ describe("Template Service Tests", () => {
       ).rejects.toThrow("Failed to delete template");
       expect(mockTemplateModel.findByIdAndUpdate).toHaveBeenCalledWith(
         "invalidId",
-        { isDeleted: true, updatedBy: "user123" }
+        { isDeleted: true, updatedBy: "user123" },
+        { new: true }
       );
     });
 
@@ -197,6 +199,9 @@ describe("Template Service Tests", () => {
           ],
           isDeleted: false,
           updatedBy: "user123",
+        },
+        {
+          new: true,
         }
       );
       expect(result).toEqual(mockTemplate);
@@ -257,7 +262,8 @@ describe("Template Service Tests", () => {
               required: true,
             },
           ],
-        })
+        }),
+        { new: true }
       );
     });
   });
