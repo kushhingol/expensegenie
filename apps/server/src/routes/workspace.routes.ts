@@ -25,4 +25,16 @@ router.delete(
   WorkspaceController.deleteWorkspaceController
 );
 
+router.get(
+  "/:workspaceId",
+  authenticateUser,
+  WorkspaceController.getWorkspaceByWorkspaceIdController
+);
+
+router.get(
+  "/",
+  authenticateUser,
+  WorkspaceController.getAllWorkspacesByUserIdController
+);
+
 export default router;
