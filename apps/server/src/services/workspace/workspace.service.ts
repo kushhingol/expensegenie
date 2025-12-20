@@ -16,6 +16,14 @@ export class WorkspaceService {
   ) {
     return updateWorkspaceFn(workspaceId, payload);
   }
+
+  static async getWorkspaceByWorkspaceId(workspaceId: string) {
+    return getWorkspaceByWorkspaceIdFn(workspaceId);
+  }
+
+  static async getAllWorkspacesByUserId(userId: string) {
+    return getAllWorkspaceByUserIdFn(userId);
+  }
 }
 
 const createWorkspaceFn = async (payload: Omit<WorkspaceType, "id">) => {
@@ -95,4 +103,34 @@ const updateWorkspaceFn = async (
     throw new Error("Failed to update workspace");
   }
   return workspace;
+};
+
+const getWorkspaceByWorkspaceIdFn = async (workspaceId: string) => {
+  if (!workspaceId) {
+    throw new Error("WorkspaceId not found");
+  }
+
+  const workspace = await WorkspaceModel.findById(workspaceId);
+
+  if (!workspace) {
+    throw new Error("Worksapce not found");
+  }
+
+  return workspace;
+};
+
+const getAllWorkspaceByUserIdFn = async (userId: string) => {
+  if (!userId) {
+    throw new Error("UserId not found");
+  }
+
+  const workspaces = await WorkspaceModel.find({
+    $and: [{ userId: userId }, { isDeleted: false }],
+  });
+
+  if (!workspaces || !workspaces.length) {
+    throw new Error("Workspaces not found");
+  }
+
+  return workspaces;
 };
