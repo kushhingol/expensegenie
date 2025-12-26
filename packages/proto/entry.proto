@@ -17,5 +17,4 @@ message Entry {
     google.protobuf.Timestamp updated_at  = 10;
     string                    created_by  = 11;
     string                    updated_by  = 12;
-
 }
