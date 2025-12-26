@@ -1,4 +1,4 @@
-import mongoose, { Schema, InferSchemaType } from "mongoose";
+import mongoose, { InferSchemaType } from "mongoose";
 import { Entry as EntrySchema } from "@expensegenie/proto-gen";
 
 export type EntrySchemaDocument = InferSchemaType<typeof EntrySchema>;
@@ -11,7 +11,7 @@ const entrySchema = new mongoose.Schema<EntrySchemaDocument>(
     tags: { type: [String], default: [] },
     date: { type: String, required: true },
     textForEmbedding: { type: String },
-    customTemplateFields: {
+    templateCustomFields: {
       type: mongoose.Schema.Types.Mixed,
       default: {},
     },
@@ -25,7 +25,7 @@ const entrySchema = new mongoose.Schema<EntrySchemaDocument>(
   }
 );
 
-export const EntryModule = mongoose.model<EntrySchemaDocument>(
-  "Template",
+export const EntryModel = mongoose.model<EntrySchemaDocument>(
+  "Entry",
   entrySchema
 );

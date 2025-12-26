@@ -1,5 +1,5 @@
 import { WorkspaceModel } from "../../models/workspace.model";
-import { Template, Workspace as WorkspaceType } from "@expensegenie/proto-gen";
+import { Workspace as WorkspaceType } from "@expensegenie/proto-gen";
 
 export class WorkspaceService {
   static async createWorkspace(payload: Omit<WorkspaceType, "id">) {
