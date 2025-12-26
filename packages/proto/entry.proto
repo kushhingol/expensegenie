@@ -3,18 +3,17 @@ package expensegenie;
 import "google/protobuf/timestamp.proto";
 import "google/protobuf/any.proto";
 
-
 message Entry {
-    string workspace_id = 1;
-    string template_id = 2;
-    string user_id = 3;
-    repeated string tags = 4;
-    google.protobuf.Timestamp date = 5;
-    bool is_deleted = 6;
-    map<string, google.protobuf.Any> template_custom_fields = 7;
-    string text_for_embedding = 8;
-    google.protobuf.Timestamp created_at  = 9;
-    google.protobuf.Timestamp updated_at  = 10;
-    string                    created_by  = 11;
-    string                    updated_by  = 12;
+  string                           workspace_id           = 1;
+  string                           template_id            = 2;
+  string                           user_id                = 3;
+  repeated string                  tags                   = 4;
+  google.protobuf.Timestamp        date                   = 5;
+  bool                             is_deleted             = 6;
+  map<string, google.protobuf.Any> template_custom_fields = 7;
+  string                           text_for_embedding     = 8;
+  google.protobuf.Timestamp        created_at             = 9;
+  google.protobuf.Timestamp        updated_at             = 10;
+  string                           created_by             = 11;
+  string                           updated_by             = 12;
 }
